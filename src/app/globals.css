@@ -1,0 +1,55 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #0F1729;
+  color: #F5F1E8;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+* { box-sizing: border-box; }
+
+a { color: inherit; }
+
+.lpw-tnum { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum'; }
+
+.lpw-mono { font-family: 'Geist Mono', 'JetBrains Mono', ui-monospace, monospace; }
+
+@keyframes lpw-spinner-draw {
+  0% { stroke-dashoffset: 113; }
+  50% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -113; }
+}
+
+@keyframes lpw-trail-draw {
+  from { stroke-dashoffset: 52; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes lpw-loop-draw {
+  from { stroke-dashoffset: 88; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes lpw-plane-in {
+  0% { opacity: 0; transform: translateX(-6px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+.lpw-intro .lpw-trail {
+  stroke-dasharray: 52;
+  stroke-dashoffset: 52;
+  animation: lpw-trail-draw 280ms ease-out 0ms forwards;
+}
+
+.lpw-intro .lpw-loop {
+  stroke-dasharray: 88;
+  stroke-dashoffset: 88;
+  animation: lpw-loop-draw 320ms ease-out 240ms forwards;
+}
+
+.lpw-intro .lpw-plane {
+  opacity: 0;
+  transform-origin: 55px 44px;
+  animation: lpw-plane-in 200ms ease-out 540ms forwards;
+}
