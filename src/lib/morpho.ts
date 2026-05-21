@@ -41,6 +41,15 @@ export async function readMarket(client: PublicClient): Promise<MarketState> {
   };
 }
 
+export async function readIsAuthorized(client: PublicClient, authorizer: Address, authorized: Address): Promise<boolean> {
+  return await client.readContract({
+    address: ADDRS.MORPHO as Address,
+    abi: MORPHO_ABI,
+    functionName: 'isAuthorized',
+    args: [authorizer, authorized],
+  });
+}
+
 export async function readPosition(client: PublicClient, user: Address): Promise<Position> {
   const out = await client.readContract({
     address: ADDRS.MORPHO as Address,

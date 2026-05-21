@@ -30,7 +30,9 @@ export const useUiStore = create<UiState>((set) => ({
   leverage: 2.0,
   setLeverage: (n) => set({ leverage: n }),
   slippageBps: 15,
-  setSlippageBps: (n) => set({ slippageBps: n }),
+  // Clamped to [1, 1000] so a programmatic caller can't accidentally bypass
+  // swap protection (0 bps) or set an absurdly wide tolerance (>10%).
+  setSlippageBps: (n) => set({ slippageBps: Math.max(1, Math.min(1000, Math.round(n))) }),
   txOpen: false,
   txHash: undefined,
   txError: undefined,

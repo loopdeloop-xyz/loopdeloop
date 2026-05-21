@@ -40,7 +40,7 @@ export const theme = createTheme({
     body1: { fontSize: 15, fontWeight: 400, lineHeight: 1.55 },
     body2: { fontSize: 13, fontWeight: 400, lineHeight: 1.5 },
     button: { fontSize: 14, fontWeight: 500, textTransform: 'none', letterSpacing: 0 },
-    caption: { fontSize: 11, fontWeight: 500, letterSpacing: '0.18em', textTransform: 'uppercase' },
+    caption: { fontSize: 10, fontWeight: 500, letterSpacing: '0.18em', textTransform: 'uppercase' },
   },
   shape: { borderRadius: radii.md },
   components: {

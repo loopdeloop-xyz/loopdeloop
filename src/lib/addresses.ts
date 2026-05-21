@@ -18,6 +18,10 @@ export const ADDRS = {
 
   UNI_V3_SWAP_ROUTER_02: '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45',
   UNI_V3_QUOTER_V2: '0x61fFE014bA17989E743c5F6cB21bF9697530B21e',
+  UNI_V3_PRIME_USDC_POOL: '0x5B70A1582135BD04e39CA94A6a56Fc3A828e3115',
+
+  // Chainlink ETH / USD price feed (mainnet). 8-decimal answer.
+  CHAINLINK_ETH_USD: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419',
 } as const satisfies Record<string, Address>;
 
 export const MARKET_ID =
@@ -59,4 +63,25 @@ function readFeeRecipient(): Address {
 
 export const FEE_RECIPIENT = readFeeRecipient();
 
-export const FEE_BPS = 100n;
+// Fee schedule (basis points).
+//   OPEN_FEE_BPS    — 1.00%, applied to USDC input on `executeOpen` (v2 default).
+//   CLOSE_FEE_BPS   — 0.50%, applied to USDC proceeds before final transfer to user.
+//   ADD_FEE_BPS     — 0.25%, applied to USDC input on `executeAddCollateral`.
+//   REPAY_FEE_BPS   — 0.25%, applied to USDC input on `executeRepay`.
+export const OPEN_FEE_BPS = 100n;
+export const CLOSE_FEE_BPS = 50n;
+export const ADD_FEE_BPS = 25n;
+export const REPAY_FEE_BPS = 25n;
+export const ADJUST_FEE_BPS = 25n;
+
+// Default slippage tolerances (bps).
+//   PRIME/USDC on Uniswap V3 is thinner than the Curve stable leg.
+//   Close defaults higher to absorb that.
+export const DEFAULT_OPEN_SLIPPAGE_BPS = 15;
+export const DEFAULT_ADD_SLIPPAGE_BPS = 15;
+export const DEFAULT_REPAY_SLIPPAGE_BPS = 15;
+export const DEFAULT_CLOSE_SLIPPAGE_BPS = 30;
+export const DEFAULT_ADJUST_SLIPPAGE_BPS = 30;
+
+// Back-compat alias for v2 callers that still import FEE_BPS.
+export const FEE_BPS = OPEN_FEE_BPS;

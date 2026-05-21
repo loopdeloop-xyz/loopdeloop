@@ -33,7 +33,7 @@ export function LoopForm() {
     <Paper elevation={0} sx={{ p: 2.5, maxWidth: 560, mx: 'auto', width: '100%' }}>
       <Stack spacing={2}>
         <Stack spacing={0.5}>
-          <Typography variant="caption" sx={{ color: colors.coral, fontSize: 10 }}>
+          <Typography variant="caption" sx={{ color: colors.coral }}>
             Leverage, executed cleanly
           </Typography>
           <Typography variant="h2" sx={{ fontSize: 22 }}>
@@ -42,7 +42,7 @@ export function LoopForm() {
         </Stack>
 
         <Box>
-          <Typography variant="caption" sx={{ color: colors.creamMuted, display: 'block', mb: 0.75, fontSize: 10 }}>
+          <Typography variant="caption" sx={{ color: colors.creamMuted, display: 'block', mb: 0.75 }}>
             Deposit
           </Typography>
           <TextField
@@ -97,7 +97,7 @@ export function LoopForm() {
 
         <Box>
           <Stack direction="row" justifyContent="space-between" alignItems="baseline" sx={{ mb: 0.5 }}>
-            <Typography variant="caption" sx={{ color: colors.creamMuted, fontSize: 10 }}>Leverage</Typography>
+            <Typography variant="caption" sx={{ color: colors.creamMuted }}>Leverage</Typography>
             <Typography
               sx={{
                 color: colors.amber,

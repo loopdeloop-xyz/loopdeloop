@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import { Dialog, DialogContent, Stack, Typography, Link, Button, Box } from '@mui/material';
 import { useUiStore } from '@/state/store';
 import { LoopSpinner } from './brand/LoopSpinner';
+import { useTxGasUsd } from '@/hooks/useTxGasUsd';
 import { colors } from '@/lib/theme/tokens';
 
 function StatusIcon({ status }: { status: string }) {
@@ -26,16 +26,17 @@ function StatusIcon({ status }: { status: string }) {
   return <LoopSpinner size={56} />;
 }
 
-function buildShareLinks(lev?: number, apy?: number) {
+function buildShareLinks(lev?: number, apy?: number, gasUsd?: number) {
   const qs = new URLSearchParams();
   if (lev !== undefined) qs.set('lev', lev.toFixed(2));
   if (apy !== undefined) qs.set('apy', apy.toFixed(4));
   const shareUrl = `https://loopdeloop.xyz/share?${qs.toString()}`;
   const ogUrl = `https://loopdeloop.xyz/share/og?${qs.toString()}`;
+  const gasFragment = gasUsd !== undefined ? ` $${gasUsd.toFixed(2)} in gas.` : '';
   const text =
     lev !== undefined && apy !== undefined
-      ? `Just opened a ${lev.toFixed(2)}× leveraged PRIME loop. ${(apy * 100).toFixed(2)}% net APY in a single transaction.`
-      : 'Just opened a leveraged PRIME loop in a single transaction.';
+      ? `⚡ ${lev.toFixed(2)}× PRIME looped. ${(apy * 100).toFixed(2)}% net APY.${gasFragment}\nOne transaction bundled via loopdeloop.xyz`
+      : 'Leveraged PRIME loop. One transaction bundled via loopdeloop.xyz';
   const intentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`;
   return { shareUrl, ogUrl, intentUrl, text };
 }
@@ -51,62 +52,13 @@ function XLogo({ size = 16 }: { size?: number }) {
 interface Share { shareUrl: string; ogUrl: string; intentUrl: string; text: string }
 
 function ShareControls({ share }: { share: Share }) {
-  const [hint, setHint] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-
-  async function fetchImage(): Promise<{ blob: Blob; file: File } | null> {
-    const res = await fetch(share.ogUrl, { cache: 'force-cache' });
-    if (!res.ok) return null;
-    const blob = await res.blob();
-    const file = new File([blob], 'loopdeloop-position.png', { type: 'image/png' });
-    return { blob, file };
-  }
-
-  async function onShare() {
-    setBusy(true);
-    setHint(null);
-    try {
-      const got = await fetchImage();
-      if (!got) {
-        window.open(share.intentUrl, '_blank', 'noopener,noreferrer');
-        return;
-      }
-      const { blob, file } = got;
-
-      // 1. Web Share API with files. Mobile (and some desktops) opens a native sheet
-      // that hands the image directly to the X app as attached media.
-      const nav = typeof navigator !== 'undefined' ? navigator : undefined;
-      if (nav?.canShare?.({ files: [file] })) {
-        try {
-          await nav.share({ text: share.text, url: share.shareUrl, files: [file] });
-          return;
-        } catch (e) {
-          // user cancelled or unsupported target; fall through to clipboard path
-          if (e instanceof Error && e.name === 'AbortError') return;
-        }
-      }
-
-      // 2. Clipboard image + open X compose. User pastes the image into the tweet.
-      let clipboardOk = false;
-      if (typeof ClipboardItem !== 'undefined' && nav?.clipboard?.write) {
-        try {
-          await nav.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-          clipboardOk = true;
-        } catch {
-          // clipboard blocked or denied; continue with intent only
-        }
-      }
-
-      window.open(share.intentUrl, '_blank', 'noopener,noreferrer');
-      if (clipboardOk) {
-        const isMac = typeof navigator !== 'undefined' && /Mac/.test(navigator.platform);
-        setHint(`Image copied — paste into your tweet with ${isMac ? '⌘V' : 'Ctrl+V'}.`);
-      } else {
-        setHint('Tip: download the image below if your browser blocked the clipboard.');
-      }
-    } finally {
-      setBusy(false);
-    }
+  function onShare() {
+    // Always open the X compose intent. X's crawler scrapes our share page's
+    // og:image / twitter:image tags and renders the position card natively in
+    // the compose window. No Web Share API anywhere — on macOS desktop that
+    // surfaces the system share sheet (AirDrop, Messages, Mail), which doesn't
+    // include X as a target.
+    window.open(share.intentUrl, '_blank', 'noopener,noreferrer');
   }
 
   return (
@@ -127,11 +79,10 @@ function ShareControls({ share }: { share: Share }) {
         <Button
           variant="contained"
           onClick={onShare}
-          disabled={busy}
           sx={{ flex: 1, gap: 1, '&:hover': { textDecoration: 'none' } }}
         >
           <XLogo size={15} />
-          {busy ? 'Preparing…' : 'Share on X'}
+          Share on X
         </Button>
         <Button
           variant="outlined"
@@ -143,11 +94,6 @@ function ShareControls({ share }: { share: Share }) {
           Download
         </Button>
       </Stack>
-      {hint && (
-        <Typography variant="caption" sx={{ color: colors.amber, fontSize: 11, letterSpacing: 0, textTransform: 'none', textAlign: 'center', maxWidth: 420 }}>
-          {hint}
-        </Typography>
-      )}
     </Stack>
   );
 }
@@ -172,7 +118,9 @@ export function TxStatusModal() {
   const explorerUrl = txHash ? `https://etherscan.io/tx/${txHash}` : undefined;
   const dismissible = txStatus === 'success' || txStatus === 'error';
   const isSuccess = txStatus === 'success';
-  const share = isSuccess ? buildShareLinks(txLeverage, txNetApy) : undefined;
+  // Pull the real USD gas cost from the on-chain receipt once we have a hash.
+  const { data: gasUsd } = useTxGasUsd(isSuccess ? txHash : undefined);
+  const share = isSuccess ? buildShareLinks(txLeverage, txNetApy, gasUsd) : undefined;
 
   return (
     <Dialog

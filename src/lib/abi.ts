@@ -237,6 +237,72 @@ export const GA1_ABI = [
   },
 ] as const;
 
+// Chainlink AggregatorV3 — latestRoundData (used for ETH/USD).
+export const CHAINLINK_AGGREGATOR_ABI = [
+  {
+    type: 'function', name: 'latestRoundData', stateMutability: 'view', inputs: [],
+    outputs: [
+      { name: 'roundId', type: 'uint80' },
+      { name: 'answer', type: 'int256' },
+      { name: 'startedAt', type: 'uint256' },
+      { name: 'updatedAt', type: 'uint256' },
+      { name: 'answeredInRound', type: 'uint80' },
+    ],
+  },
+] as const;
+
+// Uniswap V3 SwapRouter02 — exactInputSingle. The pool used for PRIME/USDC
+// is the 0.01% fee tier (`UNI_V3_PRIME_USDC_FEE = 100`). This is the only
+// PRIME/USDC pool that exists on V3 mainnet.
+export const UNI_V3_ROUTER_ABI = [
+  {
+    type: 'function',
+    name: 'exactInputSingle',
+    stateMutability: 'payable',
+    inputs: [{
+      type: 'tuple',
+      name: 'params',
+      components: [
+        { name: 'tokenIn', type: 'address' },
+        { name: 'tokenOut', type: 'address' },
+        { name: 'fee', type: 'uint24' },
+        { name: 'recipient', type: 'address' },
+        { name: 'amountIn', type: 'uint256' },
+        { name: 'amountOutMinimum', type: 'uint256' },
+        { name: 'sqrtPriceLimitX96', type: 'uint160' },
+      ],
+    }],
+    outputs: [{ name: 'amountOut', type: 'uint256' }],
+  },
+] as const;
+
+// Uniswap V3 QuoterV2 — quoteExactInputSingle. Not strictly `view`; reverts
+// internally to return the quote, but readable via `eth_call`.
+export const UNI_V3_QUOTER_ABI = [
+  {
+    type: 'function',
+    name: 'quoteExactInputSingle',
+    stateMutability: 'nonpayable',
+    inputs: [{
+      type: 'tuple',
+      name: 'params',
+      components: [
+        { name: 'tokenIn', type: 'address' },
+        { name: 'tokenOut', type: 'address' },
+        { name: 'amountIn', type: 'uint256' },
+        { name: 'fee', type: 'uint24' },
+        { name: 'sqrtPriceLimitX96', type: 'uint160' },
+      ],
+    }],
+    outputs: [
+      { name: 'amountOut', type: 'uint256' },
+      { name: 'sqrtPriceX96After', type: 'uint160' },
+      { name: 'initializedTicksCrossed', type: 'uint32' },
+      { name: 'gasEstimate', type: 'uint256' },
+    ],
+  },
+] as const;
+
 export const CURVE_POOL_ABI = [
   {
     type: 'function', name: 'exchange_received', stateMutability: 'nonpayable',

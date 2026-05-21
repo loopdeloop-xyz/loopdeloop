@@ -24,20 +24,25 @@ export async function generateMetadata({ searchParams }: SP): Promise<Metadata> 
   const description = apy
     ? `${(Number(apy) * 100).toFixed(2)}% net APY in a single transaction. Non-custodial, flashloan-funded.`
     : 'Leveraged PRIME loops on Morpho Blue. One transaction. Non-custodial.';
+  const altText = lev && apy
+    ? `loopdeloop position card showing a ${Number(lev).toFixed(2)}× leveraged PRIME loop at ${(Number(apy) * 100).toFixed(2)}% net APY`
+    : 'loopdeloop — leveraged PRIME loops on Morpho';
   return {
     title,
     description,
     openGraph: {
       title,
       description,
+      type: 'website',
       url: `${SITE}/share?${qs.toString()}`,
-      images: [{ url: imageUrl, width: 1200, height: 630 }],
+      images: [{ url: imageUrl, width: 1200, height: 630, alt: altText }],
     },
     twitter: {
       card: 'summary_large_image',
+      site: '@loopdeloop',
       title,
       description,
-      images: [imageUrl],
+      images: [{ url: imageUrl, alt: altText }],
     },
   };
 }

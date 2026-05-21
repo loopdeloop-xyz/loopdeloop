@@ -20,7 +20,7 @@ loopdeloop packs the whole sequence into one transaction using Morpho's [Bundler
    - Borrows PYUSD against it (matching the flash amount) to repay the flash.
 4. The user's position is now open at the target leverage. The flashloan auto-repays.
 
-Position state is read directly from Morpho Blue. Closing is currently a manual operation through the Morpho dashboard.
+Position state is read directly from Morpho Blue. The `/positions` page exposes in-app management: adjust leverage (lever up or lever down at preserved equity) and atomic close (full or partial back to USDC). All management flows are also single-transaction bundles.
 
 ## Mechanics
 

@@ -1,8 +1,20 @@
+/*
+ * Initial paint colors. These mirror `colors.midnight` and `colors.cream`
+ * in `src/lib/theme/tokens.ts` — keep them in sync. We can't import the TS
+ * tokens here, and we can't rely on MUI's `--mui-palette-*` variables either
+ * (those hydrate with React, after first paint). So the literal hex stays,
+ * exposed as CSS vars so any other rule in this file references them by name.
+ */
+:root {
+  --lpw-midnight: #0F1729;
+  --lpw-cream: #F5F1E8;
+}
+
 html, body {
   margin: 0;
   padding: 0;
-  background: #0F1729;
-  color: #F5F1E8;
+  background: var(--lpw-midnight);
+  color: var(--lpw-cream);
   -webkit-font-smoothing: antialiased;
   font-feature-settings: 'cv11', 'ss01';
 }

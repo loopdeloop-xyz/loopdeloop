@@ -149,7 +149,7 @@ export function PromoCard() {
       <Grid container spacing={{ xs: 2, md: 3 }} alignItems="center">
         <Grid size={{ xs: 12, md: 6 }}>
           <Stack spacing={1.25}>
-            <Typography variant="caption" sx={{ color: colors.coral, fontSize: 10 }}>
+            <Typography variant="caption" sx={{ color: colors.coral }}>
               Why loopdeloop
             </Typography>
             <Typography variant="h2" sx={{ fontSize: { xs: 19, md: 22 }, lineHeight: 1.15 }}>
@@ -201,7 +201,7 @@ export function PromoCard() {
               bgcolor: colors.midnight,
             }}
           >
-            <Typography variant="caption" sx={{ color: colors.creamMuted, display: 'block', mb: 1.25, fontSize: 10 }}>
+            <Typography variant="caption" sx={{ color: colors.creamMuted, display: 'block', mb: 1.25 }}>
               How a loop opens
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>

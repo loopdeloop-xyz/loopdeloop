@@ -5,6 +5,7 @@ import { useAccount, useWalletClient, useChainId, useSwitchChain } from 'wagmi';
 import { mainnet } from 'wagmi/chains';
 import { useUiStore } from '@/state/store';
 import { useQuote } from './QuotePanel';
+import { useUsdcBalance } from '@/hooks/useUsdcBalance';
 import { executeLoop } from '@/lib/execute';
 import { useMemo } from 'react';
 import { colors } from '@/lib/theme/tokens';
@@ -15,6 +16,7 @@ export function ExecuteButton() {
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
   const { quote, loading } = useQuote();
+  const { data: balance } = useUsdcBalance(address);
   const slippageBps = useUiStore((s) => s.slippageBps);
   const startTx = useUiStore((s) => s.startTx);
   const setTxSigning = useUiStore((s) => s.setTxSigning);
@@ -30,8 +32,9 @@ export function ExecuteButton() {
     if (!quote) return 'Enter an amount';
     if (loading) return 'Quoting…';
     if (quote.inputUsdc === 0n) return 'Enter an amount';
+    if (balance !== undefined && quote.inputUsdc > balance) return 'Insufficient USDC balance';
     return undefined;
-  }, [isConnected, chainId, quote, loading]);
+  }, [isConnected, chainId, quote, loading, balance]);
 
   const isBusy = txStatus === 'signing' || txStatus === 'sending' || txStatus === 'pending';
 

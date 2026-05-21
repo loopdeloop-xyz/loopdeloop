@@ -147,7 +147,7 @@ export function QuotePanel() {
           </Stack>
         ) : (
           <Stack spacing={1}>
-            <Typography variant="caption" sx={{ color: colors.creamMuted, fontSize: 10 }}>Quote</Typography>
+            <Typography variant="caption" sx={{ color: colors.creamMuted }}>Quote</Typography>
             <Typography variant="body2" sx={{ color: colors.creamMuted, fontSize: 12.5 }}>
               Enter a USDC amount to see the projection.
             </Typography>
@@ -168,7 +168,7 @@ export function QuotePanel() {
         <Stack spacing={0.5}>
           <Stack direction="row" alignItems="center" spacing={1}>
             <LogoMarkCompact size={12} />
-            <Typography variant="caption" sx={{ color: colors.creamMuted, fontSize: 10 }}>Net APY</Typography>
+            <Typography variant="caption" sx={{ color: colors.creamMuted }}>Net APY</Typography>
           </Stack>
           <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.5 }}>
             <Typography sx={{
@@ -186,7 +186,7 @@ export function QuotePanel() {
         </Stack>
 
         <Box>
-          <Typography variant="caption" sx={{ color: colors.creamMuted, display: 'block', mb: 0.25, fontSize: 10 }}>
+          <Typography variant="caption" sx={{ color: colors.creamMuted, display: 'block', mb: 0.25 }}>
             Breakdown
           </Typography>
           <Box sx={{ '& > div + div': { borderTop: `1px solid ${colors.midnightLine}` } }}>
@@ -214,7 +214,7 @@ export function QuotePanel() {
         </Box>
 
         <Box>
-          <Typography variant="caption" sx={{ color: colors.creamMuted, display: 'block', mb: 0.25, fontSize: 10 }}>
+          <Typography variant="caption" sx={{ color: colors.creamMuted, display: 'block', mb: 0.25 }}>
             Risk
           </Typography>
           <Box sx={{ '& > div + div': { borderTop: `1px solid ${colors.midnightLine}` } }}>

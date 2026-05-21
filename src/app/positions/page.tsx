@@ -1,36 +1,41 @@
 'use client';
 
-import { Box, Container, Stack, Typography, Paper } from '@mui/material';
+import { Box, Container, Grid, Stack, Typography, Paper } from '@mui/material';
 import { useAccount } from 'wagmi';
 import { Header } from '@/components/Header';
-import { PositionCard } from '@/components/PositionCard';
+import { TxStatusModal } from '@/components/TxStatusModal';
+import { PositionStatCard } from '@/components/positions/PositionStatCard';
+import { RiskCard } from '@/components/positions/RiskCard';
+import { ManageSection } from '@/components/positions/ManageSection';
 import { colors } from '@/lib/theme/tokens';
 
 export default function PositionsPage() {
   const { address, isConnected } = useAccount();
   return (
-    <Box sx={{ minHeight: '100vh' }}>
+    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       <Header />
-      <Container maxWidth="md" sx={{ py: 6 }}>
-        <Stack spacing={4}>
-          <Stack spacing={1}>
-            <Typography variant="caption" sx={{ color: colors.coral }}>Live state</Typography>
-            <Typography variant="h2" sx={{ fontSize: 28 }}>Your loops</Typography>
+      <Container maxWidth="lg" sx={{ py: 2, flex: 1, minHeight: 0, overflow: 'auto' }}>
+        {!isConnected || !address ? (
+          <Paper elevation={0} sx={{ p: 3 }}>
             <Typography variant="body2" sx={{ color: colors.creamMuted }}>
-              Position read directly from Morpho Blue PRIME / PYUSD market.
+              Connect Phantom to view your position.
             </Typography>
-          </Stack>
-          {!isConnected || !address ? (
-            <Paper elevation={0} sx={{ p: 4 }}>
-              <Typography variant="body2" sx={{ color: colors.creamMuted }}>
-                Connect Phantom to view your position.
-              </Typography>
-            </Paper>
-          ) : (
-            <PositionCard user={address} />
-          )}
-        </Stack>
+          </Paper>
+        ) : (
+          <Grid container spacing={2} alignItems="stretch">
+            <Grid size={{ xs: 12, md: 7 }}>
+              <ManageSection user={address} />
+            </Grid>
+            <Grid size={{ xs: 12, md: 5 }}>
+              <Stack spacing={2} sx={{ height: '100%' }}>
+                <PositionStatCard user={address} />
+                <RiskCard user={address} />
+              </Stack>
+            </Grid>
+          </Grid>
+        )}
       </Container>
+      <TxStatusModal />
     </Box>
   );
 }

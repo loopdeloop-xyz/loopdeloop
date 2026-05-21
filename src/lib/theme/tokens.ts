@@ -21,7 +21,12 @@ export const radii = {
   xl: 20,
 } as const;
 
+// The `var(--font-geist-...)` references come from `next/font/google` in
+// `app/layout.tsx`, which assigns the loaded font to those CSS variables on
+// `<html>`. Listing them first means the MUI theme uses the next/font
+// instance (with all its subsetting and woff2 preloading) rather than relying
+// on the literal name 'Geist' to match.
 export const fonts = {
-  sans: "'Geist', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif",
-  mono: "'Geist Mono', 'JetBrains Mono', ui-monospace, monospace",
+  sans: "var(--font-geist-sans), 'Geist', 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif",
+  mono: "var(--font-geist-mono), 'Geist Mono', 'JetBrains Mono', ui-monospace, monospace",
 } as const;
